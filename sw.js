@@ -1,17 +1,46 @@
-const CACHE = "agenda-v2";
+
+const CACHE = "agenda-v3";
 const ASSETS = [
-  "/agenda-eletronica/",
-  "/agenda-eletronica/index.html",
-  "/agenda-eletronica/manifest.json",
-  "/agenda-eletronica/style/style.css",
-  "/agenda-eletronica/style/responsivo.css",
-  "/agenda-eletronica/js/index.js"
+  "./",
+  "./index.html",
+  "./manifest.json",
+  "./style/style.css",
+  "./style/responsivo.css",
+  "./js/index.js"
 ];
 
-self.addEventListener("install", e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
+self.addEventListener("install", (e) => {
+  e.waitUntil(
+    caches.open(CACHE).then((cache) => cache.addAll(ASSETS))
+  );
+  self.skipWaiting();
 });
 
-self.addEventListener("fetch", e => {
-  e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
+self.addEventListener("activate", (e) => {
+  e.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(
+        keys
+          .filter((key) => key !== CACHE)
+          .map((key) => caches.delete(key))
+      )
+    )
+  );
+  self.clients.claim();
+});
+
+self.addEventListener("fetch", (e) => {
+  if (e.request.method !== "GET") return;
+
+  e.respondWith(
+    fetch(e.request)
+      .then((response) => {
+        if (response.ok) {
+          const copia = response.clone();
+          caches.open(CACHE).then((cache) => cache.put(e.request, copia));
+        }
+        return response;
+      })
+      .catch(() => caches.match(e.request))
+  );
 });
