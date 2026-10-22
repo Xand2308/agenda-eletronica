@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Minha Agenda Eletrônica</title>
-    <meta name="theme-color" content="#0f172a">
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon-192.png">
-    <link rel="icon" href="icon-192.png" type="image/png">
+    <meta name="theme-color" content="#0f172a" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="icon-192.png" />
+    <link rel="icon" href="icon-192.png" type="image/png" />
     <link rel="stylesheet" href="style/style.css" />
-    <link rel="stylesheet" href="style/responsivo.css">
+    <link rel="stylesheet" href="style/responsivo.css" />
   </head>
   <body>
     <button id="btnTema" class="btn-tema-flutuante">🌙</button>
@@ -21,11 +21,12 @@
         <button id="btnMesProximo" class="btn-mes">&gt;</button>
       </div>
       <div class="dias-semana">
-        <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
+        <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span
+        ><span>S</span><span>S</span>
       </div>
       <div class="grid-dias" id="gridDias"></div>
       <div class="busca-lateral-container">
-        <input type="text" id="campoBusca" placeholder="Pesquisar tarefa"/>
+        <input type="text" id="campoBusca" placeholder="Pesquisar tarefa" />
         <button id="btnBusca">Buscar</button>
       </div>
     </div>
@@ -65,11 +66,14 @@
       </div>
     </div>
 
+    <!-- BIBLIOTECA DE CONFETES (Via CDN Atualizada) -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+
     <script src="js/index.js"></script>
     <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('./sw.js');
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("./sw.js");
         });
       }
     </script>

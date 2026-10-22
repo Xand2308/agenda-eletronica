@@ -15,7 +15,6 @@ const listaTarefas = document.getElementById("listaTarefas");
 
 // Variável para controlar qual mês está sendo exibido no mini-calendário
 let dataAtualCalendario = new Date();
-
 // Limpa a lista ao iniciar
 listaTarefas.innerHTML = "";
 
@@ -236,6 +235,12 @@ function adicionarTarefa(
   // EVENTO: Marcar / desmarcar como concluída
   textoSpan.addEventListener("click", function () {
     novoItem.classList.toggle("concluida");
+
+    if (novoItem.classList.contains("concluida")) {
+      tocarSomConclusao();
+      dispararConfetes();
+    }
+
     salvarTarefas();
     atualizarContador();
     atualizarProgresso();
@@ -400,4 +405,40 @@ if (campoBusca) {
       executarBusca();
     }
   });
+}
+
+function tocarSomConclusao() {
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const oscilador = audioCtx.createOscillator();
+  const ganho = audioCtx.createGain();
+
+  oscilador.type = "sine";
+  // Frequência inicial (Nota Dó - 523.25Hz) e rampa até a nota Lá (880Hz)
+  oscilador.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+  oscilador.frequency.exponentialRampToValueAtTime(
+    880,
+    audioCtx.currentTime + 0.15
+  );
+
+  // Controle de volume (começa em 0.1 e faz fade out até 0.01)
+  ganho.gain.setValueAtTime(0.1, audioCtx.currentTime);
+  ganho.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+
+  // Conecta o oscilador ao ganho e o ganho aos alto-falantes
+  oscilador.connect(ganho);
+  ganho.connect(audioCtx.destination);
+
+  // Inicia e para o som
+  oscilador.start();
+  oscilador.stop(audioCtx.currentTime + 0.15);
+}
+
+function dispararConfetes() {
+  if (typeof confetti === "function") {
+    confetti({
+      particleCount: 40,
+      spread: 60,
+      origin: { y: 0.7 },
+    });
+  }
 }
