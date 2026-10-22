@@ -618,6 +618,7 @@ body.modo-claro .barra-fundo {
 }
 
 .tag-categoria {
+  cursor: pointer;
   font-size: 0.75rem;
   padding: 2px 8px;
   border-radius: 6px;
