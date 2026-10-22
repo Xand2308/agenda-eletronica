@@ -6,6 +6,11 @@
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
+html,
+body {
+  overflow-x: hidden;
+}
+
 /* Fundo da página com a imagem centralizada */
 body {
   background-image: url("../fundo.jpg");
@@ -15,7 +20,9 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100vh;
   min-height: 100vh;
+  overflow: hidden;
 }
 
 /* Cartão central com efeito Glassmorphism (Vidro Fosco) */
@@ -28,7 +35,7 @@ body {
   border-radius: 16px;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
   width: 100%;
-  max-width: 420px;
+  max-width: 520px;
 }
 
 /* Título */
@@ -163,7 +170,7 @@ li.concluida {
 .filtros-container {
   display: flex;
   justify-content: center;
-  gap: 8px;
+  gap: 20px;
   margin-bottom: 20px;
 }
 
@@ -608,4 +615,38 @@ body.modo-claro .info-progresso {
 
 body.modo-claro .barra-fundo {
   background: rgba(0, 0, 0, 0.1) !important;
+}
+
+.tag-categoria {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 6px;
+  margin-left: 8px;
+  font-weight: bold;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+.tag-pessoal {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.4);
+}
+
+.tag-trabalho {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.tag-estudos {
+  background-color: rgba(168, 85, 247, 0.2);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.4);
+}
+
+.tag-urgente {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.4);
 }

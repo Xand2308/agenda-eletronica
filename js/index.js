@@ -1,4 +1,5 @@
 // 1. Seleção dos elementos do HTML
+const campoCategoria = document.getElementById("campoCategoria")
 const campoBusca = document.getElementById("campoBusca");
 const btnBusca = document.getElementById("btnBusca");
 const btnMesAnterior = document.getElementById("btnMesAnterior");
@@ -24,15 +25,19 @@ function salvarTarefas() {
   const itens = listaTarefas.querySelectorAll("li");
 
   itens.forEach(function (item) {
+    const textoNome = item.querySelector(".texto-tarefa");
     const textoSpan = item.querySelector("span");
-    const spanCompleto = textoSpan.textContent;
-
-    // Remove a data formatada e o emoji para salvar apenas o texto puro da tarefa
-    const textoPuro = spanCompleto.split(" 📅")[0].trim();
+    const spanCompleto = textoNome
+      ? textoNome.textContent
+      : textoSpan
+        ? textoSpan.textContent
+        : "";
+    const categoria = item.dataset.categoria || "pessoal";
+    const textoPuro = limparTextoTarefa(spanCompleto, categoria);
 
     const concluida = item.classList.contains("concluida");
     const data = item.dataset.data || "";
-    tarefas.push({ texto: textoPuro, concluida: concluida, data: data });
+    tarefas.push({ texto: textoPuro, concluida: concluida, data: data, categoria: categoria });
   });
 
   localStorage.setItem("tarefasMinhaLista", JSON.stringify(tarefas));
@@ -181,15 +186,39 @@ function filtrarTarefas(tipo) {
   });
 }
 
+const NOMES_CATEGORIAS = {
+  pessoal: "Pessoal",
+  trabalho: "Trabalho",
+  estudos: "Estudos",
+  urgente: "Urgente",
+};
+
+function limparTextoTarefa(texto, categoria) {
+  let limpo = (texto || "").split(" 📅")[0].trim();
+  const nome = NOMES_CATEGORIAS[categoria];
+  if (nome) {
+    const sufixo = new RegExp("\\s*" + nome + "\\s*$", "i");
+    while (sufixo.test(limpo)) {
+      limpo = limpo.replace(sufixo, "").trim();
+    }
+  }
+  return limpo;
+}
+
 // 2. Função para criar e adicionar uma tarefa
 function adicionarTarefa(
   textoParam = null,
   dataParam = null,
   concluidaParam = false,
+  categoriaParam = null,
+  skipSave = false
 ) {
-  const textoTarefa =
+  const textoDigitado =
     textoParam !== null ? textoParam : campoTarefa.value.trim();
   const dataTarefa = dataParam !== null ? dataParam : campoDataTarefa.value;
+  const categoriaTarefa =
+    categoriaParam !== null ? categoriaParam : campoCategoria.value;
+  const textoTarefa = limparTextoTarefa(textoDigitado, categoriaTarefa);
 
   if (textoTarefa === "") {
     alert("Por Favor, digite uma tarefa!");
@@ -201,7 +230,15 @@ function adicionarTarefa(
     novoItem.dataset.data = dataTarefa;
   }
 
+  novoItem.dataset.categoria = categoriaTarefa;
+
   const textoSpan = document.createElement("span");
+  const textoNome = document.createElement("span");
+  textoNome.className = "texto-tarefa";
+
+  const spanTag = document.createElement("span");
+  spanTag.className = `tag-categoria tag-${categoriaTarefa}`;
+  spanTag.textContent = NOMES_CATEGORIAS[categoriaTarefa] || "Pessoal";
 
   // Correção da data de hoje para comparação exata (YYYY-MM-DD)
   const hojeObj = new Date();
@@ -216,13 +253,16 @@ function adicionarTarefa(
 
     if (dataTarefa === dataHojeString) {
       novoItem.classList.add("tarefa-hoje");
-      textoSpan.textContent = `${textoTarefa} 📅 (${dataFormadataBr}) 🔥 Vence Hoje!`;
+      textoNome.textContent = `${textoTarefa} 📅 (${dataFormadataBr}) 🔥 Vence Hoje!`;
     } else {
-      textoSpan.textContent = `${textoTarefa} 📅 (${dataFormadataBr})`;
+      textoNome.textContent = `${textoTarefa} 📅 (${dataFormadataBr})`;
     }
   } else {
-    textoSpan.textContent = textoTarefa;
+    textoNome.textContent = textoTarefa;
   }
+
+  textoSpan.appendChild(textoNome);
+  textoSpan.appendChild(spanTag);
 
   if (concluidaParam) {
     novoItem.classList.add("concluida");
@@ -261,8 +301,9 @@ function adicionarTarefa(
   novoItem.appendChild(btnRemover);
   listaTarefas.appendChild(novoItem);
 
-  // Salva, atualiza contador, progresso e redesenha o calendário
-  salvarTarefas();
+  if (!skipSave) {
+    salvarTarefas();
+  }
   atualizarContador();
   atualizarProgresso();
   renderizarCalendario();
@@ -283,8 +324,15 @@ function carregarTarefas() {
     const listaDeTarefas = JSON.parse(tarefasSalvas);
 
     listaDeTarefas.forEach(function (tarefa) {
-      adicionarTarefa(tarefa.texto, tarefa.data, tarefa.concluida);
+      adicionarTarefa(
+        tarefa.texto,
+        tarefa.data,
+        tarefa.concluida,
+        tarefa.categoria,
+        true
+      );
     });
+    salvarTarefas();
   }
 
   atualizarContador();
