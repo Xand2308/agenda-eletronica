@@ -1,0 +1,611 @@
+/* Configuração geral */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Fundo da página com a imagem centralizada */
+body {
+  background-image: url("../fundo.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Cartão central com efeito Glassmorphism (Vidro Fosco) */
+.container {
+  background: rgba(255, 255, 255, 0.15); /* Transparência suave */
+  backdrop-filter: blur(12px); /* Efeito de desfoque no fundo */
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Borda brilhante sutil */
+  padding: 35px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 420px;
+}
+
+/* Título */
+header h1 {
+  color: #ffffff;
+  font-size: 26px;
+  text-align: center;
+  margin-bottom: 25px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Container do campo e botão */
+.input-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+/* Campo de texto semi-transparente */
+input[type="text"] {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  outline: none;
+  font-size: 14px;
+  color: #333;
+}
+
+input[type="text"]:focus {
+  border-color: #28a745;
+  background: #ffffff;
+}
+
+/* Botão de adicionar elegante */
+button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+button:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+/* Lista de tarefas */
+ul {
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 5px;
+  margin-top: 10px;
+}
+
+#listaTarefas::-webkit-scrollbar {
+  width: 6px;
+}
+
+#listaTarefas::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+#listaTarefas::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+li {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  border-left: 5px solid #28a745;
+  font-size: 15px;
+  color: #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+li:hover {
+  transform: translateX(3px);
+}
+
+/* Estilo para tarefas concluídas */
+li.concluida {
+  text-decoration: line-through;
+  color: #888;
+  background: rgba(240, 240, 240, 0.7);
+  border-left-color: #6c757d;
+}
+
+/* Botão de remover */
+.btn-remover {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: none;
+}
+
+.btn-remover:hover {
+  background-color: #bd2130;
+}
+
+.contador {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #ffffff;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 15px;
+}
+
+.filtros-container {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.btn-filtro {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: none;
+}
+
+.btn-filtro:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: none;
+}
+
+.btn-filtro.ativo {
+  background-color: #28a745;
+  border-color: #28a745;
+  font-weight: bold;
+}
+
+.data-hora {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+  margin-bottom: 20px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Garante alinhamento relativo da página */
+body {
+  position: relative;
+}
+
+/* Mini Calendário no canto superior direito da tela */
+.mini-calendario {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 12px;
+  border-radius: 12px;
+  width: 230px;
+  color: white;
+  font-size: 12px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  z-index: 100;
+}
+
+.mes-ano {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.dias-semana,
+.grid-dias {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  gap: 2px;
+}
+
+.dias-semana span {
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.7);
+  padding-bottom: 4px;
+}
+
+.grid-dias span {
+  padding: 4px 0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.grid-dias span:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Estilo para dias com compromissos pendentes */
+.grid-dias span.tem-tarefa {
+  background-color: #ffc107;
+  color: #111;
+  font-weight: bold;
+}
+
+/* Container de busca abaixo do mini-calendário */
+.busca-lateral-container {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#campoBusca {
+  flex: 1;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  outline: none;
+  font-size: 12px;
+}
+
+#campoBusca::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+#btnBusca {
+  padding: 6px 6px;
+  border-radius: 6px;
+  border: none;
+  background: #007bff;
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s;
+  box-shadow: none;
+}
+
+#btnBusca:hover {
+  background: #0056b3;
+  transform: none;
+}
+
+/* Ajustes para o Modo Claro na Busca Lateral */
+body.modo-claro .busca-lateral-container {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.modo-claro #campoBusca {
+  background: rgba(255, 255, 255, 0.8) !important;
+  border: 1px solid rgba(0, 0, 0, 0.2) !important;
+  color: #2b2b2b !important;
+}
+
+body.modo-claro #campoBusca::placeholder {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+#campoDataTarefa {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 8px;
+  border-radius: 6px;
+  outline: none;
+  font-size: 13px;
+}
+
+#campoDataTarefa::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
+
+#campoTarefa {
+  flex: 2;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  outline: none;
+}
+
+#campoTarefa {
+  flex: 1;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  outline: none;
+}
+
+.input-container button {
+  flex: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  background: #28a745;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.input-container button:hover {
+  background: #218838;
+}
+
+.mes-ano {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+#mesAnoTitulo {
+  font-size: 13px;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+}
+
+.btn-mes {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.2s;
+}
+
+.btn-mes:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+#campoTarefa::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+#campoTarefa {
+  color: white;
+}
+
+#campoDataTarefa {
+  color: white;
+}
+
+.grid-dias span.dia-selecionado {
+  background-color: #007bff !important;
+  color: white !important;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+.tarefa-destacada {
+  background-color: rgba(255, 193, 7, 0.4) !important;
+  border-left: 4px solid #ffc107;
+  transition: background-color 0.3s ease;
+}
+
+.grid-dias span {
+  cursor: pointer;
+}
+
+/* TEMA CLARO (LIGHT MODE) - CORES FORTES E ESPECÍFICAS */
+/* Botão de tema flutuante no canto superior esquerdo (Fixado e Redondo/Quadrado perfeito) */
+.btn-tema-flutuante {
+  position: fixed !important;
+  top: 20px !important;
+  left: 20px !important;
+  width: 45px !important;
+  height: 45px !important;
+  min-width: 45px !important;
+  min-height: 45px !important;
+  max-width: 45px !important;
+  max-height: 45px !important;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: white;
+  border-radius: 12px;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  transition:
+    transform 0.2s,
+    background 0.2s;
+  z-index: 100;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.btn-tema-flutuante:hover {
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Ajuste no modo claro para o botão flutuante */
+body.modo-claro .btn-tema-flutuante {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  color: #2b2b2b !important;
+}
+/* TEMA CLARO (LIGHT MODE) - Mantendo a mesma textura/imagem de fundo mais clara */
+body.modo-claro {
+  /* Substitua 'sua-imagem.jpg' pelo nome da imagem de fundo que você já usa no seu projeto, 
+     ou ajuste o tom claro para combinar perfeitamente com os traços do escuro */
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.75)),
+    url("../fundo.jpg") no-repeat center center fixed !important;
+  background-size: cover !important;
+  color: #2b2b2b !important;
+}
+
+body.modo-claro .container,
+body.modo-claro .mini-calendario {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  color: #2b2b2b !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1) !important;
+}
+
+body.modo-claro .container h1,
+body.modo-claro .data-hora,
+body.modo-claro .contador {
+  color: #2b2b2b !important;
+}
+
+body.modo-claro #campoTarefa,
+body.modo-claro #campoDataTarefa {
+  background: rgba(255, 255, 255, 0.8) !important;
+  border: 1px solid rgba(0, 0, 0, 0.2) !important;
+  color: #2b2b2b !important;
+}
+
+body.modo-claro #campoTarefa::placeholder {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+body.modo-claro .btn-filtro {
+  background: rgba(0, 0, 0, 0.08) !important;
+  color: #333333 !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+body.modo-claro .btn-filtro.ativo {
+  background: #007bff !important;
+  color: white !important;
+}
+
+body.modo-claro #listaTarefas li {
+  background: rgba(255, 255, 255, 0.8) !important;
+  color: #2b2b2b !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+body.modo-claro .btn-tema-flutuante {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  color: #2b2b2b !important;
+}
+
+body.modo-claro .btn-mes {
+  background: rgba(0, 0, 0, 0.1) !important;
+  color: #2b2b2b !important;
+}
+
+body.modo-claro .mini-calendario .dias-semana span,
+body.modo-claro .mini-calendario .grid-dias span {
+  color: #2b2b2b !important;
+}
+
+body.modo-claro .mini-calendario .grid-dias span.tem-tarefa {
+  background-color: #ffc107 !important;
+  color: #000 !important;
+}
+
+#listaTarefas li.tarefa-hoje {
+  border-left: 4px solid #ff4757 !important;
+  background: rgba(255, 71, 87, 0.15) !important;
+}
+
+body.modo-claro #listaTarefas li.tarefa-hoje {
+  background: rgba(255, 71, 87, 0.2);
+  border-left: 4px solid #e84118 !important;
+}
+/* Painel de Produtividade Flutuante no Canto Inferior Esquerdo */
+.painel-progresso-flutuante {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 260px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: white;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  z-index: 100;
+}
+
+.info-progresso {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.barra-fundo {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.barra-preenchida {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #00c6ff, #0072ff);
+  border-radius: 4px;
+  transition: width 0.4s ease-in-out;
+}
+
+/* Ajustes do widget flutuante para o Modo Claro */
+body.modo-claro .painel-progresso-flutuante {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  color: #2b2b2b !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1) !important;
+}
+
+body.modo-claro .info-progresso {
+  color: #2b2b2b !important;
+}
+
+body.modo-claro .barra-fundo {
+  background: rgba(0, 0, 0, 0.1) !important;
+}

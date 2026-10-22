@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Minha Agenda Eletrônica</title>
+    <link rel="stylesheet" href="style/style.css" />
+    <link rel="stylesheet" href="style/responsivo.css">
+  </head>
+  <body>
+    <!-- 1. BOTÃO DE TEMA (Canto superior esquerdo) -->
+    <button id="btnTema" class="btn-tema-flutuante">🌙</button>
+
+    <!-- 2. O CALENDÁRIO (Canto superior direito) -->
+    <div id="miniCalendario" class="mini-calendario">
+      <div class="mes-ano">
+        <button id="btnMesAnterior" class="btn-mes">&lt;</button>
+        <span id="mesAnoTitulo">Outubro 2026</span>
+        <button id="btnMesProximo" class="btn-mes">&gt;</button>
+      </div>
+      <div class="dias-semana">
+        <span>D</span>
+        <span>S</span>
+        <span>T</span>
+        <span>Q</span>
+        <span>Q</span>
+        <span>S</span>
+        <span>S</span>
+      </div>
+      <div class="grid-dias" id="gridDias"></div>
+
+      <div class="busca-lateral-container">
+        <input type="text" id="campoBusca" placeholder="Pesquisar tarefa"/>
+        <button id="btnBusca">Buscar</button>
+      </div>
+    </div>
+
+    <!-- 3. CONTAINER PRINCIPAL (Apenas a lista e os inputs ficam aqui dentro) -->
+    <div class="container">
+      <header>
+        <h1>Minha Agenda Eletrônica</h1>
+        <div id="dataHora" class="data-hora"></div>
+      </header>
+
+      <div class="input-container">
+        <input type="text" id="campoTarefa" placeholder="Digite uma tarefa" />
+        <input type="date" id="campoDataTarefa" />
+        <button id="btnAdicionar">Adicionar</button>
+      </div>
+
+      <div class="filtros-container">
+        <button class="btn-filtro ativo" data-filtro="todas">Todas</button>
+        <button class="btn-filtro" data-filtro="pendentes">Pendentes</button>
+        <button class="btn-filtro" data-filtro="concluidas">Concluídas</button>
+      </div>
+
+      <div cla>
+
+      </div>
+
+      <ul id="listaTarefas">
+        <li>Exemplo de tarefa (pode apagar depois)</li>
+      </ul>
+
+      <div id="contadorTarefas" class="contador">Nenhuma Tarefa Pendente</div>
+    </div>
+
+    <!-- 4. PAINEL DE PROGRESSO FLUTUANTE (Fora do container, no canto inferior esquerdo) -->
+    <div id="painelProgresso" class="painel-progresso-flutuante">
+      <div class="info-progresso">
+        <span id="textoProgresso">0% concluído</span>
+        <span id="contadorConcluidas">0 de 0</span>
+      </div>
+      <div class="barra-fundo">
+        <div id="barraPreenchida" class="barra-preenchida"></div>
+      </div>
+    </div>
+
+    <script src="js/index.js"></script>
+  </body>
+</html>
