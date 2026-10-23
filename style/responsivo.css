@@ -26,6 +26,7 @@
 
   /* 2. Força todos os blocos principais a respeitarem 100% da largura com margem segura */
   .container,
+  .widget-lateral,
   .mini-calendario,
   .painel-progresso-flutuante {
     position: relative !important;
@@ -39,6 +40,10 @@
     margin-right: 0 !important;
     margin-bottom: 15px !important;
     box-sizing: border-box !important;
+  }
+
+  .widget-lateral .mini-calendario {
+    margin-bottom: 0 !important;
   }
 
   /* 3. Botão de tema centralizado ou alinhado no topo */
