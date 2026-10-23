@@ -83,4 +83,14 @@
     padding: 10px;
     font-size: 16px;
   }
+
+  .grid-dias span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    padding: 6px 0;
+    font-size: 20px;
+    box-sizing: border-box;
+  }
 }
