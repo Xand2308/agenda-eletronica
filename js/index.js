@@ -42,34 +42,54 @@ if (inputImportar) {
     if (!arquivo) return;
 
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = () => {
+      let dadosImportados;
+
       try {
-        const dadosImportados = JSON.parse(e.target.result);
-        if (Array.isArray(dadosImportados)) {
-          // Salvando com a chave correta
-          localStorage.setItem(
-            "tarefasMinhaLista",
-            JSON.stringify(dadosImportados),
-          );
-
-          // Atualiza a tela da agenda
-          if (typeof carregarTarefas === "function") {
-            carregarTarefas();
-          } else if (typeof atualizarLista === "function") {
-            atualizarLista();
-          } else {
-            location.reload();
-          }
-
-          alert("Dados importados com sucesso!");
-        } else {
-          alert("O arquivo selecionado não é um backup válido.");
-        }
+        const conteudo = String(reader.result || "").replace(/^\uFEFF/, "");
+        dadosImportados = JSON.parse(conteudo);
       } catch (error) {
+        console.error("Falha ao interpretar o arquivo de backup:", error);
         alert("Erro ao ler o arquivo JSON.");
+        inputImportar.value = "";
+        return;
       }
+
+      if (
+        !Array.isArray(dadosImportados) ||
+        dadosImportados.some(
+          (tarefa) =>
+            !tarefa ||
+            typeof tarefa !== "object" ||
+            typeof tarefa.texto !== "string",
+        )
+      ) {
+        alert("O arquivo selecionado não é um backup válido.");
+        inputImportar.value = "";
+        return;
+      }
+
+      try {
+        localStorage.setItem(
+          "tarefasMinhaLista",
+          JSON.stringify(dadosImportados),
+        );
+        carregarTarefas();
+        alert("Dados importados com sucesso!");
+      } catch (error) {
+        console.error("Falha ao importar o backup:", error);
+        alert("Não foi possível importar os dados para a agenda.");
+      } finally {
+        inputImportar.value = "";
+      }
+    };
+
+    reader.onerror = () => {
+      console.error("Falha ao ler o arquivo de backup:", reader.error);
+      alert("Não foi possível ler o arquivo selecionado.");
       inputImportar.value = "";
     };
+
     reader.readAsText(arquivo);
   });
 }
