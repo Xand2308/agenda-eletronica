@@ -16,9 +16,9 @@ const campoTarefa = document.getElementById("campoTarefa");
 const campoPrioridade = document.getElementById("campoPrioridade");
 const btnAdicionar = document.getElementById("btnAdicionar");
 const listaTarefas = document.getElementById("listaTarefas");
+
 if (btnExportar) {
   btnExportar.addEventListener("click", () => {
-    // Usando a chave correta encontrada no seu localStorage: "tarefasMinhaLista"
     const tarefasSalvas = localStorage.getItem("tarefasMinhaLista");
     if (!tarefasSalvas || JSON.parse(tarefasSalvas).length === 0) {
       alert("Não há tarefas para exportar!");
@@ -93,6 +93,7 @@ if (inputImportar) {
     reader.readAsText(arquivo);
   });
 }
+
 // Variável para controlar qual mês está sendo exibido no mini-calendário
 let dataAtualCalendario = new Date();
 
@@ -179,7 +180,6 @@ function renderizarCalendario() {
   const ano = dataAtualCalendario.getFullYear();
   const mes = dataAtualCalendario.getMonth();
 
-  // Nome do mês e ano atualizado conforme a navegação
   const nomeMes = dataAtualCalendario.toLocaleString("pt-BR", {
     month: "long",
     year: "numeric",
@@ -214,7 +214,6 @@ function renderizarCalendario() {
     const diaFormatado = String(dia).padStart(2, "0");
     const dataString = `${ano}-${mesFormatado}-${diaFormatado}`;
 
-    // Destaca o dia de hoje apenas no mês e ano reais
     if (
       dia === hojeReal.getDate() &&
       mes === hojeReal.getMonth() &&
@@ -310,7 +309,71 @@ function limparTextoTarefa(texto, categoria) {
   return limpo;
 }
 
-// 2. Função para criar e adicionar uma tarefa
+function formatarTextoTarefa(texto, data) {
+  if (!data) return texto;
+
+  const [ano, mes, dia] = data.split("-");
+  const dataFormatada = `${dia}/${mes}`;
+  const hoje = new Date();
+  const dataHoje = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, "0")}-${String(hoje.getDate()).padStart(2, "0")}`;
+
+  if (data === dataHoje) {
+    return `${texto} 📅 (${dataFormatada}) 🔥 Vence Hoje!`;
+  }
+
+  return `${texto} 📅 (${dataFormatada})`;
+}
+
+// ==========================================
+// FUNÇÃO DE EDIÇÃO INLINE (Duplo Clique)
+// ==========================================
+function iniciarEdicaoInline(elementoSpan, textoPuroOriginal) {
+  const inputEdit = document.createElement("input");
+  inputEdit.type = "text";
+  inputEdit.value = textoPuroOriginal;
+  inputEdit.className = "input-edicao-inline";
+
+  elementoSpan.replaceWith(inputEdit);
+  inputEdit.focus();
+  inputEdit.select();
+
+  let salvo = false;
+
+  const salvarEdicao = () => {
+    if (salvo) return;
+    salvo = true;
+
+    const novoTexto = inputEdit.value.trim();
+
+    if (novoTexto !== "") {
+      const item = inputEdit.closest("li");
+      elementoSpan.textContent = formatarTextoTarefa(
+        novoTexto,
+        item.dataset.data,
+      );
+      inputEdit.replaceWith(elementoSpan);
+      salvarTarefas();
+    } else {
+      alert("O texto da tarefa não pode ficar vazio!");
+      carregarTarefas();
+    }
+  };
+
+  inputEdit.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      salvarEdicao();
+    } else if (e.key === "Escape") {
+      salvo = true;
+      carregarTarefas();
+    }
+  });
+
+  inputEdit.addEventListener("blur", () => {
+    salvarEdicao();
+  });
+}
+
+// Função para criar e adicionar uma tarefa
 function adicionarTarefa(
   textoParam = null,
   dataParam = null,
@@ -349,6 +412,7 @@ function adicionarTarefa(
   const textoSpan = document.createElement("span");
   const textoNome = document.createElement("span");
   textoNome.className = "texto-tarefa";
+  textoNome.title = "Dê um duplo clique para editar esta tarefa";
 
   const spanTag = document.createElement("span");
   spanTag.className = `tag-categoria tag-${categoriaTarefa}`;
@@ -359,26 +423,20 @@ function adicionarTarefa(
   spanPrioridade.textContent =
     prioridadeTarefa.charAt(0).toUpperCase() + prioridadeTarefa.slice(1);
 
-  // Correção da data de hoje para comparação exata (YYYY-MM-DD)
-  const hojeObj = new Date();
-  const anoH = hojeObj.getFullYear();
-  const mesH = String(hojeObj.getMonth() + 1).padStart(2, "0");
-  const diaH = String(hojeObj.getDate()).padStart(2, "0");
-  const dataHojeString = `${anoH}-${mesH}-${diaH}`;
-
   if (dataTarefa) {
-    const partes = dataTarefa.split("-");
-    const dataFormadataBr = `${partes[2]}/${partes[1]}`;
-
+    const hoje = new Date();
+    const dataHojeString = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, "0")}-${String(hoje.getDate()).padStart(2, "0")}`;
     if (dataTarefa === dataHojeString) {
       novoItem.classList.add("tarefa-hoje");
-      textoNome.textContent = `${textoTarefa} 📅 (${dataFormadataBr}) 🔥 Vence Hoje!`;
-    } else {
-      textoNome.textContent = `${textoTarefa} 📅 (${dataFormadataBr})`;
     }
-  } else {
-    textoNome.textContent = textoTarefa;
   }
+  textoNome.textContent = formatarTextoTarefa(textoTarefa, dataTarefa);
+
+  // EVENTO DE DUPLO CLIQUE PARA EDITAR O TEXTO DA TAREFA
+  textoNome.addEventListener("dblclick", (e) => {
+    e.stopPropagation();
+    iniciarEdicaoInline(textoNome, textoTarefa);
+  });
 
   textoSpan.appendChild(textoNome);
   textoSpan.appendChild(spanTag);
@@ -392,7 +450,6 @@ function adicionarTarefa(
   btnRemover.textContent = "X";
   btnRemover.className = "btn-remover";
 
-  // EVENTO: Marcar / desmarcar como concluída
   textoSpan.addEventListener("click", function () {
     novoItem.classList.toggle("concluida");
 
@@ -407,7 +464,6 @@ function adicionarTarefa(
     renderizarCalendario();
   });
 
-  // EVENTO: Remover tarefa
   btnRemover.addEventListener("click", function (event) {
     event.stopPropagation();
     novoItem.remove();
@@ -468,7 +524,6 @@ function carregarTarefas() {
 carregarTarefas();
 renderizarCalendario();
 
-// Escutadores de eventos principais
 btnAdicionar.addEventListener("click", function () {
   adicionarTarefa();
 });
@@ -479,7 +534,6 @@ campoTarefa.addEventListener("keypress", function (event) {
   }
 });
 
-// Eventos de clique para navegar entre os meses no calendário
 btnMesAnterior.addEventListener("click", function () {
   dataAtualCalendario.setMonth(dataAtualCalendario.getMonth() - 1);
   renderizarCalendario();
@@ -490,7 +544,6 @@ btnMesProximo.addEventListener("click", function () {
   renderizarCalendario();
 });
 
-// Escutadores para os botões de filtro
 botoesFiltro.forEach(function (botao) {
   botao.addEventListener("click", function (e) {
     botoesFiltro.forEach(function (btn) {
@@ -503,7 +556,6 @@ botoesFiltro.forEach(function (botao) {
   });
 });
 
-// Relógio e Data no topo
 function atualizarDataHora() {
   const agora = new Date();
   const opcoes = {
@@ -521,21 +573,17 @@ function atualizarDataHora() {
 atualizarDataHora();
 setInterval(atualizarDataHora, 1000);
 
-// Seleção do botão de tema flutuante
 const btnTema = document.getElementById("btnTema");
 
-// Função para alternar entre Modo Escuro e Modo Claro
 function alternarTema() {
   document.body.classList.toggle("modo-claro");
 
   const ehModoClaro = document.body.classList.contains("modo-claro");
   btnTema.textContent = ehModoClaro ? "☀️" : "🌙";
 
-  // Salva a preferência no LocalStorage
   localStorage.setItem("temaPreferido", ehModoClaro ? "claro" : "escuro");
 }
 
-// Carrega o tema salvo ao abrir a página
 function carregarTemaSalvo() {
   const temaSalvo = localStorage.getItem("temaPreferido");
 
@@ -545,15 +593,12 @@ function carregarTemaSalvo() {
   }
 }
 
-// Evento de clique no botão do tema
 if (btnTema) {
   btnTema.addEventListener("click", alternarTema);
 }
 
-// Executa ao carregar a página
 carregarTemaSalvo();
 
-// Função para executar a busca
 function executarBusca() {
   if (!campoBusca) return;
 
@@ -572,12 +617,10 @@ function executarBusca() {
   });
 }
 
-// Evento de clique no botão Buscar
 if (btnBusca) {
   btnBusca.addEventListener("click", executarBusca);
 }
 
-// Permitir buscar apertando Enter no campo de busca
 if (campoBusca) {
   campoBusca.addEventListener("keypress", function (event) {
     if (event.key === "Enter") {
@@ -597,22 +640,18 @@ function tocarSomConclusao() {
 
   oscilador.type = "sine";
 
-  // Frequência inicial (Nota Dó - 523.25Hz) e rampa até a nota Lá (880Hz)
   oscilador.frequency.setValueAtTime(523.25, audioCtx.currentTime);
   oscilador.frequency.exponentialRampToValueAtTime(
     880,
     audioCtx.currentTime + 0.15,
   );
 
-  // Controle de volume (começa em 0.1 e faz fade out até 0.01)
   ganho.gain.setValueAtTime(0.1, audioCtx.currentTime);
   ganho.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
 
-  // Conecta o oscilador ao ganho e o ganho aos alto-falantes
   oscilador.connect(ganho);
   ganho.connect(audioCtx.destination);
 
-  // Inicia e para o som
   oscilador.start();
   oscilador.stop(audioCtx.currentTime + 0.15);
 }
