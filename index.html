@@ -41,12 +41,22 @@
         <input type="text" id="campoTarefa" placeholder="Digite uma tarefa" />
         <input type="date" id="campoDataTarefa" />
 
-        <select id="campoCategoria">
-          <option value="pessoal">Pessoal 🏠</option>
-          <option value="trabalho">Trabalho 💻</option>
-          <option value="estudos">Estudos 📘</option>
-          <option value="urgente">Urgente 🔥</option>
-        </select>
+        <div class="linha-dupla">
+          <select id="campoCategoria">
+            <option value="" disabled selected hidden>Categoria</option>
+            <option value="pessoal">Pessoal 🏠</option>
+            <option value="trabalho">Trabalho 💻</option>
+            <option value="estudos">Estudos 📘</option>
+            <option value="urgente">Urgente 🔥</option>
+          </select>
+
+          <select id="campoPrioridade">
+            <option value="" disabled selected hidden>Prioridade</option>
+            <option value="alta">Alta</option>
+            <option value="media">Média</option>
+            <option value="baixa">Baixa</option>
+          </select>
+        </div>
         <button id="btnAdicionar">Adicionar</button>
       </div>
 
@@ -60,7 +70,9 @@
         <li>Exemplo de tarefa (pode apagar depois)</li>
       </ul>
 
-      <div id="contadorTarefas" class="contador">Nenhuma Tarefa Pendente 📱</div>
+      <div id="contadorTarefas" class="contador">
+        Nenhuma Tarefa Pendente 📱
+      </div>
     </div>
 
     <div id="painelProgresso" class="painel-progresso-flutuante">

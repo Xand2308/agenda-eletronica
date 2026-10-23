@@ -13,6 +13,7 @@
  const botoesFiltro = document.querySelectorAll(".btn-filtro");
  const contadorTarefas = document.getElementById("contadorTarefas");
  const campoTarefa = document.getElementById("campoTarefa");
+ const campoPrioridade = document.getElementById("campoPrioridade");
  const btnAdicionar = document.getElementById("btnAdicionar");
  const listaTarefas = document.getElementById("listaTarefas");
  
@@ -41,12 +42,14 @@
      const textoPuro = limparTextoTarefa(spanCompleto, categoria);
      const concluida = item.classList.contains("concluida");
      const data = item.dataset.data || "";
+     const prioridade = item.dataset.prioridade || "media";
  
      tarefas.push({
        texto: textoPuro,
        concluida: concluida,
        data: data,
-       categoria: categoria
+       categoria: categoria,
+       prioridade: prioridade
      });
    });
  
@@ -196,6 +199,22 @@
    estudos: "Estudos",
    urgente: "Urgente"
  };
+
+ const PESOS_PRIORIDADE = {
+   alta: 3,
+   media: 2,
+   baixa: 1
+ };
+
+ function ordenarListaDOM() {
+   const itens = Array.from(listaTarefas.querySelectorAll("li"));
+   itens.sort((a, b) => {
+     const pesoA = PESOS_PRIORIDADE[a.dataset.prioridade] || PESOS_PRIORIDADE.media;
+     const pesoB = PESOS_PRIORIDADE[b.dataset.prioridade] || PESOS_PRIORIDADE.media;
+     return pesoB - pesoA;
+   });
+   itens.forEach((item) => listaTarefas.appendChild(item));
+ }
  
  function limparTextoTarefa(texto, categoria) {
    let limpo = (texto || "").split(" 📅")[0].trim();
@@ -218,7 +237,8 @@
    dataParam = null,
    concluidaParam = false,
    categoriaParam = null,
-   skipSave = false
+   skipSave = false,
+   prioridadeParam = null
  ) {
    const textoDigitado =
      textoParam !== null ? textoParam : campoTarefa.value.trim();
@@ -228,7 +248,10 @@
  
    const categoriaTarefa =
      categoriaParam !== null ? categoriaParam : campoCategoria.value;
- 
+
+   const prioridadeTarefa =
+     prioridadeParam !== null ? prioridadeParam : campoPrioridade.value;
+
    const textoTarefa = limparTextoTarefa(textoDigitado, categoriaTarefa);
  
    if (textoTarefa === "") {
@@ -241,17 +264,23 @@
    if (dataTarefa) {
      novoItem.dataset.data = dataTarefa;
    }
- 
+
    novoItem.dataset.categoria = categoriaTarefa;
- 
+   novoItem.dataset.prioridade = prioridadeTarefa;
+
    const textoSpan = document.createElement("span");
    const textoNome = document.createElement("span");
    textoNome.className = "texto-tarefa";
- 
+
    const spanTag = document.createElement("span");
    spanTag.className = `tag-categoria tag-${categoriaTarefa}`;
    spanTag.textContent = NOMES_CATEGORIAS[categoriaTarefa] || "Pessoal";
- 
+
+   const spanPrioridade = document.createElement("span");
+   spanPrioridade.className = `tag-prioridade prioridade-${prioridadeTarefa}`;
+   spanPrioridade.textContent =
+     prioridadeTarefa.charAt(0).toUpperCase() + prioridadeTarefa.slice(1);
+
    // Correção da data de hoje para comparação exata (YYYY-MM-DD)
    const hojeObj = new Date();
    const anoH = hojeObj.getFullYear();
@@ -275,6 +304,7 @@
  
    textoSpan.appendChild(textoNome);
    textoSpan.appendChild(spanTag);
+   textoSpan.appendChild(spanPrioridade);
  
    if (concluidaParam) {
      novoItem.classList.add("concluida");
@@ -312,6 +342,7 @@
    novoItem.appendChild(textoSpan);
    novoItem.appendChild(btnRemover);
    listaTarefas.appendChild(novoItem);
+   ordenarListaDOM();
  
    if (!skipSave) {
      salvarTarefas();
@@ -342,10 +373,11 @@
          tarefa.data,
          tarefa.concluida,
          tarefa.categoria,
-         true
+         true,
+         tarefa.prioridade || "media"
        );
      });
- 
+
      salvarTarefas();
    }
  

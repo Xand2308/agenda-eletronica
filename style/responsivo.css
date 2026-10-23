@@ -75,4 +75,12 @@
     padding: 10px;
     font-size: 16px;
   }
+  
+  #campoPrioridade {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 16px;
+  }
 }
