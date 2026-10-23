@@ -325,7 +325,7 @@ function formatarTextoTarefa(texto, data) {
 }
 
 // ==========================================
-// FUNÇÃO DE EDIÇÃO INLINE (Duplo Clique)
+// FUNÇÃO DE EDIÇÃO INLINE
 // ==========================================
 function iniciarEdicaoInline(elementoSpan, textoPuroOriginal) {
   const inputEdit = document.createElement("input");
@@ -412,7 +412,6 @@ function adicionarTarefa(
   const textoSpan = document.createElement("span");
   const textoNome = document.createElement("span");
   textoNome.className = "texto-tarefa";
-  textoNome.title = "Dê um duplo clique para editar esta tarefa";
 
   const spanTag = document.createElement("span");
   spanTag.className = `tag-categoria tag-${categoriaTarefa}`;
@@ -432,10 +431,24 @@ function adicionarTarefa(
   }
   textoNome.textContent = formatarTextoTarefa(textoTarefa, dataTarefa);
 
-  // EVENTO DE DUPLO CLIQUE PARA EDITAR O TEXTO DA TAREFA
-  textoNome.addEventListener("dblclick", (e) => {
-    e.stopPropagation();
+  const iconeEditar = document.createElement("span");
+  iconeEditar.textContent = "✏️";
+  iconeEditar.className = "btn-editar";
+  iconeEditar.title = "Editar esta tarefa";
+  iconeEditar.setAttribute("role", "button");
+  iconeEditar.setAttribute("tabindex", "0");
+
+  iconeEditar.addEventListener("click", function (event) {
+    event.stopPropagation();
     iniciarEdicaoInline(textoNome, textoTarefa);
+  });
+
+  iconeEditar.addEventListener("keydown", function (event) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      event.stopPropagation();
+      iniciarEdicaoInline(textoNome, textoTarefa);
+    }
   });
 
   textoSpan.appendChild(textoNome);
@@ -474,6 +487,7 @@ function adicionarTarefa(
   });
 
   novoItem.appendChild(textoSpan);
+  novoItem.appendChild(iconeEditar);
   novoItem.appendChild(btnRemover);
   listaTarefas.appendChild(novoItem);
   ordenarListaDOM();

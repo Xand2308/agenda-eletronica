@@ -156,6 +156,19 @@ li.concluida {
   background-color: #bd2130;
 }
 
+.btn-editar {
+  flex-shrink: 0;
+  padding: 0 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.btn-editar:hover {
+  opacity: 0.75;
+  transform: scale(1.1);
+}
+
 .contador {
   margin-top: 20px;
   text-align: center;
@@ -767,4 +780,26 @@ body.modo-claro .backup-section .btn-backup {
 
 body.modo-claro .backup-section .btn-backup:hover {
   background: rgba(0, 0, 0, 0.1) !important;
+}
+
+
+.input-edicao-inline {
+  flex: 1;
+  padding: 4px 8px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+  outline: none;
+  box-sizing: border-box; 
+}
+
+body.light .input-edicao-inline,
+body.tema-claro .input-edicao-inline,
+body.light-mode .input-edicao-inline {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  color: #333333;
 }
