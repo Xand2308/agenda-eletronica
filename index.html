@@ -14,22 +14,46 @@
   <body>
     <button id="btnTema" class="btn-tema-flutuante">🌙</button>
 
-    <div id="miniCalendario" class="mini-calendario">
-      <div class="mes-ano">
-        <button id="btnMesAnterior" class="btn-mes">&lt;</button>
-        <span id="mesAnoTitulo">Outubro 2026</span>
-        <button id="btnMesProximo" class="btn-mes">&gt;</button>
+    <aside class="widget-lateral">
+      <div id="miniCalendario" class="mini-calendario">
+        <div class="mes-ano">
+          <button id="btnMesAnterior" class="btn-mes">&lt;</button>
+          <span id="mesAnoTitulo">Outubro 2026</span>
+          <button id="btnMesProximo" class="btn-mes">&gt;</button>
+        </div>
+        <div class="dias-semana">
+          <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span
+          ><span>S</span><span>S</span>
+        </div>
+        <div class="grid-dias" id="gridDias"></div>
+        <div class="busca-lateral-container">
+          <input type="text" id="campoBusca" placeholder="Pesquisar tarefa" />
+          <button id="btnBusca">Buscar</button>
+        </div>
       </div>
-      <div class="dias-semana">
-        <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span
-        ><span>S</span><span>S</span>
-      </div>
-      <div class="grid-dias" id="gridDias"></div>
-      <div class="busca-lateral-container">
-        <input type="text" id="campoBusca" placeholder="Pesquisar tarefa" />
-        <button id="btnBusca">Buscar</button>
-      </div>
-    </div>
+
+      <section class="backup-section">
+        <button
+          id="btnExportar"
+          class="btn-backup"
+          title="Baixar backup das tarefas"
+        >
+          Exportar Dados
+        </button>
+        <label
+          for="inputImportar"
+          class="btn-backup"
+          title="Restaurar tarefas de um arquivo"
+          >Importar Dados</label
+        >
+        <input
+          type="file"
+          id="inputImportar"
+          accept="json"
+          style="display: none"
+        />
+      </section>
+    </aside>
 
     <div class="container">
       <header>
@@ -70,6 +94,7 @@
         <li>Exemplo de tarefa (pode apagar depois)</li>
       </ul>
 
+
       <div id="contadorTarefas" class="contador">
         Nenhuma Tarefa Pendente 📱
       </div>
@@ -84,6 +109,7 @@
         <div id="barraPreenchida" class="barra-preenchida"></div>
       </div>
     </div>
+
 
     <!-- BIBLIOTECA DE CONFETES (Via CDN Atualizada) -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>

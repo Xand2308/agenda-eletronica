@@ -209,22 +209,32 @@ body {
   position: relative;
 }
 
-/* Mini Calendário no canto superior direito da tela */
-.mini-calendario {
+/* Calendário e ações laterais */
+.widget-lateral {
   position: fixed;
   top: 20px;
   right: 20px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 230px;
+}
+
+.mini-calendario {
+  position: relative;
+  top: auto;
+  right: auto;
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.25);
   padding: 12px;
   border-radius: 12px;
-  width: 230px;
+  width: 100%;
   color: white;
   font-size: 12px;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-  z-index: 100;
 }
 
 .mes-ano {
@@ -711,4 +721,50 @@ body.modo-claro .linha-dupla select {
 .linha-dupla select option {
   background-color: #2a2a2a;
   color: #ffffff;
+}
+
+/* Ações de backup abaixo do calendário */
+.backup-section {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.backup-section .btn-backup {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 1 !important;
+  min-width: 0;
+  padding: 10px 12px !important;
+  font-size: 0.85rem !important;
+  font-weight: 500 !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  backdrop-filter: blur(5px) !important;
+  box-sizing: border-box !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  box-shadow: none !important;
+}
+
+.backup-section .btn-backup:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  transform: none;
+}
+
+/* Suporte ao Tema Claro */
+body.modo-claro .backup-section .btn-backup {
+  background: rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  color: #333333 !important;
+}
+
+body.modo-claro .backup-section .btn-backup:hover {
+  background: rgba(0, 0, 0, 0.1) !important;
 }
