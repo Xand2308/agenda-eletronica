@@ -3,66 +3,76 @@
    (Focado em eliminar o scroll lateral indesejado)
    ========================================= */
 
-   @media screen and (max-width: 900px) {
-    /* 1. Trava o corpo da página para nunca ultrapassar a largura da tela */
-    html, body {
-        width: 100% !important;
-        overflow-x: hidden !important; /* Garante o bloqueio absoluto do scroll lateral */
-        margin: 0 !important;
-        padding: 0 !important;
-    }
+@media screen and (max-width: 900px) {
+  /* 1. Trava o corpo da página para nunca ultrapassar a largura da tela */
+  html,
+  body {
+    width: 100% !important;
+    overflow-x: hidden !important; /* Garante o bloqueio absoluto do scroll lateral */
+    margin: 0 !important;
+    padding: 0 !important;
+  }
 
-    body {
-        display: flex !important;
-        flex-direction: column !important;
-        height: auto !important;
-        min-height: 100vh;
-        padding: 15px 10px !important;
-        align-items: center !important;
-        justify-content: flex-start !important;
-        box-sizing: border-box !important;
-    }
+  body {
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+    min-height: 100vh;
+    padding: 15px 10px !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    box-sizing: border-box !important;
+  }
 
-    /* 2. Força todos os blocos principais a respeitarem 100% da largura com margem segura */
-    .container, 
-    .mini-calendario, 
-    .painel-progresso-flutuante {
-        position: relative !important;
-        top: auto !important;
-        bottom: auto !important;
-        left: auto !important;
-        right: auto !important;
-        width: 100% !important;
-        max-width: 100% !important; /* Adapta-se perfeitamente a telas de 360px, 390px, 412px, etc. */
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-        margin-bottom: 15px !important;
-        box-sizing: border-box !important;
-    }
+  /* 2. Força todos os blocos principais a respeitarem 100% da largura com margem segura */
+  .container,
+  .mini-calendario,
+  .painel-progresso-flutuante {
+    position: relative !important;
+    top: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+    width: 100% !important;
+    max-width: 100% !important; /* Adapta-se perfeitamente a telas de 360px, 390px, 412px, etc. */
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    margin-bottom: 15px !important;
+    box-sizing: border-box !important;
+  }
 
-    /* 3. Botão de tema centralizado ou alinhado no topo */
-    .btn-tema-flutuante {
-        position: relative !important;
-        top: auto !important;
-        left: auto !important;
-        align-self: flex-end;
-        margin-bottom: 15px !important;
-    }
+  /* 3. Botão de tema centralizado ou alinhado no topo */
+  .btn-tema-flutuante {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    align-self: flex-end;
+    margin-bottom: 15px !important;
+  }
 
-    /* 4. Ajustes finos nos inputs e botões para telas compactas */
-    .input-container {
-        flex-direction: column !important;
-        gap: 8px !important;
-    }
+  /* 4. Ajustes finos nos inputs e botões para telas compactas */
+  .input-container {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
 
-    .input-container input,
-    .input-container button {
-        width: 100% !important;
-    }
+  .input-container input,
+  .input-container button {
+    width: 100% !important;
+  }
 
-    /* 5. Evita que textos compridos estoureem o limite do item da lista (li) */
-    ul#listaTarefas li {
-        word-break: break-word !important;
-        overflow-wrap: break-word !important;
-    }
+  /* 5. Evita que textos compridos estoureem o limite do item da lista (li) */
+  ul#listaTarefas li {
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+  }
+
+  /*6. Ajuste do campo de categoria no celular */
+  #campoCategoria {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 16px;
+  }
 }

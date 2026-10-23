@@ -541,6 +541,10 @@ body.modo-claro .btn-mes {
   color: #2b2b2b !important;
 }
 
+body.modo-claro #mesAnoTitulo {
+  color: #2b2b2b !important;
+}
+
 body.modo-claro .mini-calendario .dias-semana span,
 body.modo-claro .mini-calendario .grid-dias span {
   color: #2b2b2b !important;
