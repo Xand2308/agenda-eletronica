@@ -46,6 +46,65 @@
     margin-bottom: 0 !important;
   }
 
+  .aviso-tarefas:not([hidden]) {
+    position: fixed !important;
+    top: calc(env(safe-area-inset-top, 0px) + 12px) !important;
+    right: 12px !important;
+    bottom: auto !important;
+    left: auto !important;
+    width: auto !important;
+    max-width: none !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    transform: none !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    z-index: 1000;
+  }
+
+  .aviso-tarefas .btn-icone-aviso {
+    display: block;
+    width: 42px;
+    height: 42px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    border-radius: 50%;
+    background: #166534;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  .aviso-tarefas .aviso-conteudo {
+    display: none;
+  }
+
+  .aviso-tarefas.aberto .aviso-conteudo {
+    position: absolute;
+    top: 50px;
+    right: 0 !important;
+    left: auto !important;
+    display: block;
+    width: min(340px, calc(100vw - 24px));
+    padding: 12px 14px 12px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 8px;
+    background: rgba(15, 23, 42, 0.96);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    color: #ffffff;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .aviso-tarefas .aviso-conteudo .btn-fechar-aviso {
+    top: 0;
+    right: 0;
+  }
+
   /* 3. Botão de tema centralizado ou alinhado no topo */
   .btn-tema-flutuante {
     position: relative !important;

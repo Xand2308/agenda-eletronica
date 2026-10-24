@@ -16,6 +16,7 @@ const campoTarefa = document.getElementById("campoTarefa");
 const campoPrioridade = document.getElementById("campoPrioridade");
 const btnAdicionar = document.getElementById("btnAdicionar");
 const listaTarefas = document.getElementById("listaTarefas");
+const avisoTarefasHoje = document.getElementById("avisoTarefasHoje");
 
 if (btnExportar) {
   btnExportar.addEventListener("click", () => {
@@ -534,8 +535,163 @@ function carregarTarefas() {
   renderizarCalendario();
 }
 
+let audioContextAlerta = null;
+let timeoutAvisoTarefasHoje = null;
+
+async function tocarSomAlerta() {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return;
+
+  if (!audioContextAlerta) {
+    audioContextAlerta = new AudioContextClass();
+  }
+
+  try {
+    if (audioContextAlerta.state !== "running") {
+      await audioContextAlerta.resume();
+    }
+  } catch (error) {
+    console.error("Não foi possível ativar o áudio de alerta:", error);
+    return;
+  }
+
+  if (audioContextAlerta.state !== "running") return;
+
+  const agora = audioContextAlerta.currentTime;
+  const tocarBipe = (frequencia, duracao, instante) => {
+    const oscilador = audioContextAlerta.createOscillator();
+    const ganho = audioContextAlerta.createGain();
+
+    oscilador.type = "sine";
+    oscilador.frequency.setValueAtTime(frequencia, instante);
+    ganho.gain.setValueAtTime(0.15, instante);
+    ganho.gain.exponentialRampToValueAtTime(0.01, instante + duracao);
+    oscilador.connect(ganho);
+    ganho.connect(audioContextAlerta.destination);
+    oscilador.start(instante);
+    oscilador.stop(instante + duracao);
+  };
+
+  tocarBipe(440, 0.1, agora);
+  tocarBipe(880, 0.12, agora + 0.15);
+}
+
+function enviarNotificacaoTarefasHoje(tarefasHoje) {
+  if (!("Notification" in window) || Notification.permission !== "granted") {
+    return;
+  }
+
+  const textoMensagem =
+    tarefasHoje.length === 1
+      ? `Você tem 1 tarefa vencendo hoje: "${tarefasHoje[0].texto}"`
+      : `Você tem ${tarefasHoje.length} tarefas vencendo hoje!`;
+
+  try {
+    new Notification("Agenda Eletrônica 📅", {
+      body: textoMensagem,
+    });
+  } catch (error) {
+    console.error("Não foi possível exibir a notificação:", error);
+  }
+}
+
+function mostrarAvisoTarefasHoje(tarefasHoje) {
+  window.clearTimeout(timeoutAvisoTarefasHoje);
+  avisoTarefasHoje.replaceChildren();
+  avisoTarefasHoje.classList.remove("aberto");
+  avisoTarefasHoje.hidden = tarefasHoje.length === 0;
+
+  if (tarefasHoje.length === 0) return;
+
+  const botaoIcone = document.createElement("button");
+  botaoIcone.type = "button";
+  botaoIcone.className = "btn-icone-aviso";
+  botaoIcone.textContent = "🔔";
+  botaoIcone.setAttribute("aria-label", "Mostrar aviso de tarefas de hoje");
+  botaoIcone.setAttribute("aria-expanded", "false");
+  botaoIcone.addEventListener("click", () => {
+    const aberto = avisoTarefasHoje.classList.toggle("aberto");
+    botaoIcone.setAttribute("aria-expanded", String(aberto));
+  });
+  avisoTarefasHoje.appendChild(botaoIcone);
+
+  const conteudo = document.createElement("div");
+  conteudo.className = "aviso-conteudo";
+
+  const botaoFechar = document.createElement("button");
+  botaoFechar.type = "button";
+  botaoFechar.className = "btn-fechar-aviso";
+  botaoFechar.textContent = "×";
+  botaoFechar.setAttribute("aria-label", "Fechar aviso de tarefas");
+  botaoFechar.title = "Fechar aviso";
+  botaoFechar.addEventListener("click", (event) => {
+    event.stopPropagation();
+    tocarSomAlerta();
+    ocultarAvisoTarefasHoje();
+  });
+  conteudo.appendChild(botaoFechar);
+
+  const mensagem = document.createElement("span");
+  mensagem.textContent =
+    tarefasHoje.length === 1
+      ? `Você tem 1 tarefa vencendo hoje: "${tarefasHoje[0].texto}".`
+      : `Você tem ${tarefasHoje.length} tarefas vencendo hoje!`;
+  conteudo.appendChild(mensagem);
+
+  avisoTarefasHoje.appendChild(conteudo);
+
+  timeoutAvisoTarefasHoje = window.setTimeout(
+    ocultarAvisoTarefasHoje,
+    10000,
+  );
+}
+
+function ocultarAvisoTarefasHoje() {
+  window.clearTimeout(timeoutAvisoTarefasHoje);
+  timeoutAvisoTarefasHoje = null;
+  avisoTarefasHoje.classList.remove("aberto");
+  avisoTarefasHoje.hidden = true;
+}
+
+function obterTarefasSalvasDeHoje() {
+  const tarefasSalvas = localStorage.getItem("tarefasMinhaLista");
+  if (!tarefasSalvas) return [];
+
+  let listaDeTarefas;
+  try {
+    listaDeTarefas = JSON.parse(tarefasSalvas);
+  } catch (error) {
+    console.error("Não foi possível ler as tarefas para o alerta:", error);
+    return [];
+  }
+
+  if (!Array.isArray(listaDeTarefas)) {
+    console.error("A lista salva de tarefas não está em um formato válido.");
+    return [];
+  }
+
+  const hoje = new Date();
+  const dataHojeString = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, "0")}-${String(hoje.getDate()).padStart(2, "0")}`;
+  return listaDeTarefas.filter(
+    (tarefa) =>
+      tarefa &&
+      tarefa.data === dataHojeString &&
+      !tarefa.concluida &&
+      typeof tarefa.texto === "string",
+  );
+}
+
+function dispararNotificacaoTarefasHoje() {
+  const tarefasHoje = obterTarefasSalvasDeHoje();
+  if (tarefasHoje.length === 0) return;
+
+  mostrarAvisoTarefasHoje(tarefasHoje);
+  enviarNotificacaoTarefasHoje(tarefasHoje);
+}
+
 // Execução ao abrir a página
 carregarTarefas();
+window.setTimeout(dispararNotificacaoTarefasHoje, 1000);
 renderizarCalendario();
 
 btnAdicionar.addEventListener("click", function () {
